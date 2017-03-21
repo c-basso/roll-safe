@@ -101,6 +101,8 @@ $(function () {
 	VK.init(function() {
 		var settings = localStorage.getItem('settings');
 
+		console.log(settings);
+
 		if (!settings || parseInt(settings) !== settingsMask) {
 			VK.callMethod('showSettingsBox', settingsMask);
 		}
