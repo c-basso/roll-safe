@@ -1,5 +1,9 @@
+<!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
+	<title>Roll Safe Meme Generator</title>
+
 	<script>
 		if(parent.frames.length === 0){
 			window.location.href = 'https://vk.com/roll_safe_meme';
@@ -8,7 +12,9 @@
 
 	<script src="https://vk.com/js/api/xd_connection.js?2"></script>
 	<script src="https://yastatic.net/jquery/3.1.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.3/js.cookie.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.8/fabric.min.js"></script>
+
 	<style>
 		* {
 			margin: 0;
@@ -18,6 +24,15 @@
 			display: none;
 		}
 	</style>
+
+	<script>
+		var rights = {
+			friends: 2,
+			photos: 4,
+			wall: 8192
+		};
+		var settingsMask = rights.friends + rights.photos + rights.wall;
+	</script>
 </head>
 <body>
 
@@ -84,11 +99,18 @@ $(function () {
 
 	//canvas.toDataURL('png')
 
-	VK.init(function() { 
-		VK.callMethod("showSettingsBox", 8192 + 2 + 4);
+	VK.init(function() {
+		var settings = Cookies.get('settings');
+		if (!settings || parseInt(settings) !== settingsMask) {
+			VK.callMethod('showSettingsBox', settingsMask);
+		}
 	}, function() { 
 		window.location.reload(true);
-	}, '5.63'); 
+	}, '5.63');
+
+	VK.addCallback('onSettingsChanged', function (settings){ 
+		Cookies.set('settings', settings, { expires: 365 });
+	});
 });
 </script>
 </body>
