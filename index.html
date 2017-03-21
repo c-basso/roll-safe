@@ -109,7 +109,7 @@ $(function () {
 	}, '5.63');
 
 	VK.addCallback('onSettingsChanged', function (settings){ 
-		Cookies.set('settings', settings, { expires: 365 });
+		Cookies.set('settings', settings, { expires: 365, path: '' });
 	});
 });
 </script>
