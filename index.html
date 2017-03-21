@@ -30,7 +30,6 @@
 			photos: 4,
 			wall: 8192
 		};
-		var settingsMask = rights.friends + rights.photos + rights.wall;
 	</script>
 </head>
 <body>
@@ -38,9 +37,10 @@
 <canvas id="canvas" height="438" width="795"></canvas>
 <img id="original" height="438" width="795" class="hidden" src="https://pp.userapi.com/c639328/v639328775/11055/jtLpXjAFj1I.jpg">
 
+<button id="wall-post">Запостить на стену</button>
 
 <script>
-$(function () {
+$(function () { VK.init(function() {
 	var top = 'Текст вверху';
 	var bottom = 'Текст внизу';
 
@@ -96,24 +96,71 @@ $(function () {
 	topText.enterEditing();
 	topText.hiddenTextarea.focus();
 
-	//canvas.toDataURL('png')
+	var sendFile = function (url, key, val, callback) {
+		var boundary = 'OLOLO';
+		var boundaryMiddle = '--' + boundary + '\r\n';
+		var boundaryLast = '--' + boundary + '--\r\n'
 
-	VK.init(function() {
-		var settings = localStorage.getItem('settings');
+		var body = [
+			'\r\n',
+			'Content-Disposition: form-data; name="' + key + '"; filename="ololopic.png"',
+			'Content-Type: image/png',
+			'\r\n',
+			val
+		];
 
-		console.log(settings);
+		var allBody = boundaryMiddle + body.join('') + boundaryLast;
 
-		if (!settings || parseInt(settings) !== settingsMask) {
-			VK.callMethod('showSettingsBox', settingsMask);
+		// Тело запроса готово, отправляем
+
+		var xhr = new XMLHttpRequest();
+		xhr.open('POST', url, true);
+
+		xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
+
+		xhr.onreadystatechange = function() {
+			if (this.readyState != 4) return;
+			callback(JSON.parse(xhr.responseText));
 		}
 
-		VK.addCallback('onSettingsChanged', function (settings){ 
-			localStorage.setItem('settings', settings);
-		});
+		xhr.send(allBody);
+	}
 
-	}, function() { 
-		window.location.reload(true);
-	}, '5.63');
+	var wallPost = function () {
+		VK.api('photos.getWallUploadServer', {}, function(server){
+			var server = server.response;
+
+			sendFile(server.upload_url, 'photo', canvas.toDataURL('png'), function (data) {
+				VK.api('photos.saveWallPhoto', data.photo, function(save){
+					VK.api('wall.post', { message: data.message, attachments: save.response[0].id }, function(wall){
+
+					});
+				});
+			})
+		});
+	};
+
+	$(document).on('click', '#wall-post', function () {
+		VK.api('account.getAppPermissions', function (data) {
+			if (!(data.response & rights.wall)) {
+				var onSettingsChanged = function(settings){ 
+					if (!(settings & rights.wall)) {
+						alert('Очень жаль');
+					} else {
+						wallPost();
+					}
+					VK.removeCallback('onSettingsChanged', onSettingsChanged);
+				}
+				VK.callMethod('showSettingsBox', rights.wall);
+				VK.addCallback('onSettingsChanged', onSettingsChanged);
+			} else {
+				wallPost();
+			}
+		});
+	})
+
+
+}, function() { window.location.reload(true); }, '5.63');
 });
 </script>
 </body>
