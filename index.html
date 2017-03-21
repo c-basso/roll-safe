@@ -1,0 +1,83 @@
+<html>
+<head>
+	<script src="https://yastatic.net/jquery/3.1.1/jquery.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.8/fabric.min.js"></script>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		.hidden {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+
+<canvas id="canvas" height="552" width="1000"></canvas>
+<img id="original" height="552" width="1000" class="hidden" src="https://pp.userapi.com/c639328/v639328775/11055/jtLpXjAFj1I.jpg">
+
+
+
+<script>
+$(function () {
+	var top = 'Текст вверху';
+	var bottom = 'Текст внизу';
+
+	var canvas = new fabric.Canvas('canvas', {selection: false, preserveObjectStacking: true});
+	var imgElement = document.getElementById('original');
+	var imgInstance = new fabric.Image(imgElement, {
+		left: 0, 
+		top: 0,
+		hasControls: false,
+		hasRotatingPoint: false,
+		lockRotation: true,
+		lockMovementX: true,
+		lockMovementY: true,
+		evented: false
+	});
+	
+	var width = 1000;
+	var height = 552;
+	var hCenter = width / 2;
+
+	var options = { 
+		width: width,
+		fontFamily: 'impact',
+		borderColor: 'rgba(0,0,0,1)',
+		fill: 'rgb(255,255,255)',
+		cursorColor: '#333',
+		originX: 'left', 
+		originY: 'top',
+		centeredRotation: true,
+		textAlign: 'center',
+		editable: true,
+		cursorColor: '#000',
+		cursorDuration: 50,
+		cursorWidth: 3,
+		editingBorderColor: '#666',
+		padding: 10
+	}
+
+	var topText = new fabric.Textbox(top, options);
+	var bottomText = new fabric.Textbox(bottom, options);
+
+	var topPoint = new fabric.Point(hCenter, 50);
+	var bottonPoint = new fabric.Point(hCenter, height - 50);
+
+	topText.setPositionByOrigin(topPoint, 'center', 'center');
+	bottomText.setPositionByOrigin(bottonPoint, 'center', 'center');
+
+	canvas.add(imgInstance);
+	canvas.add(topText);
+	canvas.add(bottomText);
+
+	canvas.setActiveObject(topText);
+	topText.enterEditing();
+	topText.hiddenTextarea.focus();
+
+	//canvas.toDataURL('png')
+});
+</script>
+</body>
+</html>
