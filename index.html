@@ -137,6 +137,9 @@ $(function () { VK.init(function() {
 			data: form,
 			processData: false,
 			contentType: false,
+			beforeSend: function(xhr){
+				xhr.setRequestHeader('Origin', 'https://c-basso.github.io');
+			},
 			success : function(data){
 				callback(data);
 			}
