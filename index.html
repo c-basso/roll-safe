@@ -140,13 +140,22 @@ $(function () { VK.init(function() {
 				data.photo = data.photo.replace('\"', '"');
 
 				VK.api('photos.saveWallPhoto', data, function(save){
+					var attachments = save.response.map(function (photo) {
+						return [
+							'photo',
+							photo.owner_id,
+							'_',
+							photo.id
+						].join('');
+					});
+
 					var wallParams = { 
 						message: 'Ololo!', 
-						attachments: save.response[0].id 
+						attachments: attachments.join(',')
 					};
 
 					VK.api('wall.post', wallParams, function(wall){
-
+						consoel.log(wall);
 					});
 				});
 			})
