@@ -111,9 +111,8 @@ $(function () { VK.init(function() {
 
 		var allBody = boundaryMiddle + body.join('') + boundaryLast;
 
-		// Тело запроса готово, отправляем
-
-		var xhr = new XMLHttpRequest();
+		var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
+		var xhr = new XHR();
 		xhr.open('POST', url, true);
 
 		xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
