@@ -123,12 +123,14 @@ $(function () { VK.init(function() {
 		var body = [
 			'\r\n',
 			'Content-Disposition: form-data; name="' + key + '"; filename="ololopic.png"',
+			'\r\n',
 			'Content-Type: image/png',
+			'\r\n',
 			'\r\n',
 			dataURItoBlob(val)
 		];
 
-		var allBody = boundaryMiddle + body.join('') + boundaryLast;
+		var allBody = body.join('') + boundaryLast;
 
 		var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 		var xhr = new XHR();
