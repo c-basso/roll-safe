@@ -116,34 +116,19 @@ $(function () { VK.init(function() {
 	}
 
 	var sendFile = function (url, key, val, callback) {
-		var boundary = 'OLOLO';
-		var boundaryMiddle = '--' + boundary + '\r\n';
-		var boundaryLast = '--' + boundary + '--\r\n'
-
-		var body = [
-			'\r\n',
-			'Content-Disposition: form-data; name="' + key + '"; filename="ololopic.png"',
-			'\r\n',
-			'Content-Type: image/png',
-			'\r\n',
-			'\r\n',
-			dataURItoBlob(val)
-		];
-
-		var allBody = body.join('') + boundaryLast;
+		var form = new FormData();
+		form.append(key, dataURItoBlob(val), 'ololo_image.png');
 
 		var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
 		var xhr = new XHR();
 		xhr.open('POST', url, true);
-
-		xhr.setRequestHeader('Content-Type', 'multipart/form-data; boundary=' + boundary);
 
 		xhr.onreadystatechange = function() {
 			if (this.readyState != 4) return;
 			callback(JSON.parse(xhr.responseText));
 		}
 
-		xhr.send(allBody);
+		xhr.send(form);
 	}
 
 	var wallPost = function () {
