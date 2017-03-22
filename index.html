@@ -118,19 +118,6 @@ $(function () { VK.init(function() {
 	var sendFile = function (url, key, val, callback) {
 		var form = new FormData();
 		form.append(key, dataURItoBlob(val), 'ololo_image.png');
-
-		// var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
-		// var xhr = new XHR();
-		// xhr.open('POST', url, true);
-
-		// xhr.onreadystatechange = function() {
-		// 	if (this.readyState != 4) return;
-		// 	console.log(xhr.responseText);
-		// 	callback(JSON.parse(xhr.responseText));
-		// }
-
-		// xhr.send(form);
-
 		$.ajax({
 			url : url,
 			type : "post",
@@ -146,14 +133,18 @@ $(function () { VK.init(function() {
 	var wallPost = function () {
 		VK.api('photos.getWallUploadServer', {}, function(server){
 			var server = server.response;
+			var uploadUrl = 'https://cors-anywhere.herokuapp.com/' + server.upload_url;
 
-			sendFile('https://cors-anywhere.herokuapp.com/' + server.upload_url, 'photo', canvas.toDataURL('png'), function (data) {
+			sendFile(uploadUrl, 'photo', canvas.toDataURL('png'), function (data) {
+				data.photo = data.photo.replace('\"', '"');
 
-				console.log('-----------------------sendFile');
-				console.log(data);
+				VK.api('photos.saveWallPhoto', data, function(save){
+					var wallParams = { 
+						message: 'Ololo!', 
+						attachments: save.response[0].id 
+					};
 
-				VK.api('photos.saveWallPhoto', data.photo, function(save){
-					VK.api('wall.post', { message: data.message, attachments: save.response[0].id }, function(wall){
+					VK.api('wall.post', wallParams, function(wall){
 
 					});
 				});
