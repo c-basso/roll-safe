@@ -119,17 +119,29 @@ $(function () { VK.init(function() {
 		var form = new FormData();
 		form.append(key, dataURItoBlob(val), 'ololo_image.png');
 
-		var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
-		var xhr = new XHR();
-		xhr.open('POST', url, true);
+		// var XHR = ("onload" in new XMLHttpRequest()) ? XMLHttpRequest : XDomainRequest;
+		// var xhr = new XHR();
+		// xhr.open('POST', url, true);
 
-		xhr.onreadystatechange = function() {
-			if (this.readyState != 4) return;
-			console.log(xhr.responseText);
-			callback(JSON.parse(xhr.responseText));
-		}
+		// xhr.onreadystatechange = function() {
+		// 	if (this.readyState != 4) return;
+		// 	console.log(xhr.responseText);
+		// 	callback(JSON.parse(xhr.responseText));
+		// }
 
-		xhr.send(form);
+		// xhr.send(form);
+
+		$.ajax({
+			url : url,
+			type : "post",
+			dataType : "jsonp",
+			data: form,
+			processData: false,
+			contentType: false,
+			success : function(data){
+				callback(data);
+			}
+		});
 	}
 
 	var wallPost = function () {
