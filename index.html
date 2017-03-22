@@ -136,6 +136,7 @@ $(function () { VK.init(function() {
 			var uploadUrl = 'https://cors-anywhere.herokuapp.com/' + server.upload_url;
 
 			sendFile(uploadUrl, 'photo', canvas.toDataURL('png'), function (data) {
+				data = JSON.parse(data);
 				data.photo = data.photo.replace('\"', '"');
 
 				VK.api('photos.saveWallPhoto', data, function(save){
