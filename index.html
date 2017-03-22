@@ -96,6 +96,25 @@ $(function () { VK.init(function() {
 	topText.enterEditing();
 	topText.hiddenTextarea.focus();
 
+	function dataURItoBlob(dataURI) {
+		var byteString;
+		if (dataURI.split(',')[0].indexOf('base64') >= 0)
+			byteString = atob(dataURI.split(',')[1]);
+		else
+			byteString = unescape(dataURI.split(',')[1]);
+
+		// separate out the mime component
+		var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+		// write the bytes of the string to a typed array
+		var ia = new Uint8Array(byteString.length);
+		for (var i = 0; i < byteString.length; i++) {
+			ia[i] = byteString.charCodeAt(i);
+		}
+
+		return new Blob([ia], {type:mimeString});
+	}
+
 	var sendFile = function (url, key, val, callback) {
 		var boundary = 'OLOLO';
 		var boundaryMiddle = '--' + boundary + '\r\n';
@@ -106,7 +125,7 @@ $(function () { VK.init(function() {
 			'Content-Disposition: form-data; name="' + key + '"; filename="ololopic.png"',
 			'Content-Type: image/png',
 			'\r\n',
-			val
+			dataURItoBlob(val)
 		];
 
 		var allBody = boundaryMiddle + body.join('') + boundaryLast;
