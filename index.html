@@ -125,6 +125,7 @@ $(function () { VK.init(function() {
 
 		xhr.onreadystatechange = function() {
 			if (this.readyState != 4) return;
+			console.log(xhr.responseText);
 			callback(JSON.parse(xhr.responseText));
 		}
 
@@ -136,6 +137,10 @@ $(function () { VK.init(function() {
 			var server = server.response;
 
 			sendFile(server.upload_url, 'photo', canvas.toDataURL('png'), function (data) {
+
+				console.log('-----------------------sendFile');
+				console.log(data);
+
 				VK.api('photos.saveWallPhoto', data.photo, function(save){
 					VK.api('wall.post', { message: data.message, attachments: save.response[0].id }, function(wall){
 
