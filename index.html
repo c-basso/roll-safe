@@ -149,8 +149,16 @@ $(function () { VK.init(function() {
 						].join('');
 					});
 
+					var top = topText.getText();
+					var bottom = bottomText.getText();
+
+					var text = [
+						'#' + top.toLowerCase().replace(/\s/g, '_'),
+						'#' + bottom.toLowerCase().replace(/\s/g, '_')
+					].join('\n');
+
 					var wallParams = { 
-						message: 'Ololo!', 
+						message: text, 
 						attachments: attachments.join(',')
 					};
 
