@@ -183,6 +183,10 @@ function initAll() {
 						attachments: attachments.join(',')
 					};
 
+					if (group_id) {
+						wallParams.owner_id = '-' + group_id;
+					}
+
 					VK.api('wall.post', wallParams, function(wall){
 						consoel.log(wall);
 					});
