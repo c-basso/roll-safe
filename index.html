@@ -137,7 +137,13 @@ function initAll() {
 	}
 
 	var wallPost = function (group_id) {
-		VK.api('photos.getWallUploadServer', {}, function(server){
+		var getServerParams = {};
+
+		if (group_id) {
+			getServerParams.group_id = group_id;
+		}
+
+		VK.api('photos.getWallUploadServer', getServerParams, function(server){
 			var server = server.response;
 			var uploadUrl = 'https://cors-anywhere.herokuapp.com/' + server.upload_url;
 
