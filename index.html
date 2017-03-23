@@ -15,6 +15,8 @@
 	<script src="https://yastatic.net/jquery/3.1.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.7.8/fabric.min.js"></script>
 
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css">
+
 	<style>
 		* {
 			margin: 0;
@@ -38,9 +40,10 @@
 <canvas id="canvas" height="438" width="795"></canvas>
 <img id="original" height="438" width="795" class="hidden" crossOrigin="Anonymous" src="https://pp.userapi.com/c639328/v639328775/11055/jtLpXjAFj1I.jpg">
 
-
-<button id="my-wall-post">Запостить на свою стену</button>
-<button id="group-wall-post">Запостить на стену группы</button>
+<div class="container text-center">
+	<button class="btn btn-info" id="my-wall-post">Запостить на свою стену</button>
+	<button class="btn btn-info" id="group-wall-post">Запостить на стену группы</button>
+</div>
 
 <script>
 function initAll() {
