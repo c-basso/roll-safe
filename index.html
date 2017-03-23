@@ -5,9 +5,10 @@
 	<title>Roll Safe Meme Generator</title>
 
 	<script>
-		if(parent.frames.length === 0){
-			window.location.href = 'https://vk.com/roll_safe_meme';
-		}
+		var groupLink = 'vk.com/roll_safe_meme';
+		// if(parent.frames.length === 0){
+		// 	window.location.href = 'https://' + groupLink;
+		// }
 	</script>
 
 	<script src="https://vk.com/js/api/xd_connection.js?2"></script>
@@ -37,12 +38,17 @@
 <canvas id="canvas" height="438" width="795"></canvas>
 <img id="original" height="438" width="795" class="hidden" crossOrigin="Anonymous" src="https://pp.userapi.com/c639328/v639328775/11055/jtLpXjAFj1I.jpg">
 
-<button id="wall-post">Запостить на стену</button>
+
+<button id="my-wall-post">Запостить на свою стену</button>
+<button id="group-wall-post">Запостить на стену группы</button>
 
 <script>
-$(function () { VK.init(function() {
+function initAll() {
 	var top = 'Текст вверху';
 	var bottom = 'Текст внизу';
+
+	var maxWidth = 795;
+	var maxHeight = 438;
 
 	var canvas = new fabric.Canvas('canvas', {selection: false, preserveObjectStacking: true});
 	var imgElement = document.getElementById('original');
@@ -56,9 +62,9 @@ $(function () { VK.init(function() {
 		lockMovementY: true,
 		evented: false
 	});
-	
-	var width = 795;
-	var height = 438;
+
+	var width = maxWidth;
+	var height = maxHeight;
 	var hCenter = width / 2;
 
 	var options = { 
@@ -98,16 +104,16 @@ $(function () { VK.init(function() {
 
 	function dataURItoBlob(dataURI) {
 		var byteString;
-		if (dataURI.split(',')[0].indexOf('base64') >= 0)
+
+		if (dataURI.split(',')[0].indexOf('base64') >= 0) {
 			byteString = atob(dataURI.split(',')[1]);
-		else
+		} else {
 			byteString = unescape(dataURI.split(',')[1]);
+		}
 
-		// separate out the mime component
 		var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-
-		// write the bytes of the string to a typed array
 		var ia = new Uint8Array(byteString.length);
+
 		for (var i = 0; i < byteString.length; i++) {
 			ia[i] = byteString.charCodeAt(i);
 		}
@@ -130,7 +136,7 @@ $(function () { VK.init(function() {
 		});
 	}
 
-	var wallPost = function () {
+	var wallPost = function (group_id) {
 		VK.api('photos.getWallUploadServer', {}, function(server){
 			var server = server.response;
 			var uploadUrl = 'https://cors-anywhere.herokuapp.com/' + server.upload_url;
@@ -138,6 +144,10 @@ $(function () { VK.init(function() {
 			sendFile(uploadUrl, 'photo', canvas.toDataURL('png'), function (data) {
 				data = JSON.parse(data);
 				data.photo = data.photo.replace('\"', '"');
+
+				if (group_id) {
+					data.group_id = group_id;
+				}
 
 				VK.api('photos.saveWallPhoto', data, function(save){
 					var attachments = save.response.map(function (photo) {
@@ -152,11 +162,14 @@ $(function () { VK.init(function() {
 					var top = topText.getText();
 					var bottom = bottomText.getText();
 
-					var text = [
-						'#' + top.toLowerCase().replace(/\s/g, '_'),
-						'&#128102;&#127998; &#128070;&#127999;',
-						'#' + bottom.toLowerCase().replace(/\s/g, '_')
-					].join('\n');
+					var text = [];
+					var t = top ? '#' + top.toLowerCase().replace(/\s/g, '_') : '';
+					var b = bottom ? '#' + bottom.toLowerCase().replace(/\s/g, '_') : '';
+
+					t && text.push(t);
+					text.push('&#128073;&#127998;&#128102;&#127998;');
+					b && text.push(b);
+					text = text.join('\n');
 
 					var wallParams = { 
 						message: text, 
@@ -171,7 +184,7 @@ $(function () { VK.init(function() {
 		});
 	};
 
-	$(document).on('click', '#wall-post', function () {
+	$(document).on('click', '#my-wall-post', function () {
 		VK.api('account.getAppPermissions', function (data) {
 			if (!(data.response & rights.wall)) {
 				var onSettingsChanged = function(settings){ 
@@ -190,8 +203,18 @@ $(function () { VK.init(function() {
 		});
 	})
 
+	$(document).on('click', '#group-wall-post', function () {
+		wallPost(142290250);
+	})
 
-}, function() { window.location.reload(true); }, '5.63');
+	VK.addCallback('onWindowResized', function (w, h) {
+		console.log(w);
+		console.log(h);
+	});
+}
+
+
+$(function () { VK.init(initAll, function() { window.location.reload(true); }, '5.63');
 });
 </script>
 </body>
