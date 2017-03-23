@@ -150,6 +150,7 @@ function initAll() {
 				}
 
 				VK.api('photos.saveWallPhoto', data, function(save){
+					console.log(save);
 					var attachments = save.response.map(function (photo) {
 						return [
 							'photo',
