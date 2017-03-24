@@ -31,6 +31,35 @@
 		.hidden {
 			display: none;
 		}
+		.spiner {
+			border: 10px solid #f3f3f3;
+			border-radius: 50%;
+			border-top: 10px solid #3498db;
+			width: 30px;
+			height: 30px;
+			-webkit-animation: spin 2s linear infinite;
+			animation: spin 2s linear infinite;
+		}
+
+		@-webkit-keyframes spin {
+			0% { -webkit-transform: rotate(0deg); }
+			100% { -webkit-transform: rotate(360deg); }
+		}
+
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+
+		.paranja {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			margin: auto;
+			background: rgba(255, 255, 255, 0.6);
+		}
 	</style>
 
 	<script>
@@ -42,6 +71,7 @@
 	</script>
 </head>
 <body>
+<div class="paranja"><div class="spiner"></div></div>
 
 <canvas id="canvas" height="438" width="795"></canvas>
 <img id="original" height="438" width="795" class="hidden" crossOrigin="Anonymous" src="https://pp.userapi.com/c639328/v639328775/11055/jtLpXjAFj1I.jpg">
