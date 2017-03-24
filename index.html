@@ -82,7 +82,12 @@ var sendFile = function (url, key, val, callback) {
 	});
 }
 
-var wallPost = function (group_id) {
+var wallPost = function (options) {
+	var group_id = options.group_id;
+	var topText = options.topText;
+	var bottomText = options.bottomText;
+	var dataURI = options.dataURI;
+
 	var getServerParams = {};
 
 	if (group_id) {
@@ -93,7 +98,7 @@ var wallPost = function (group_id) {
 		var server = server.response;
 		var uploadUrl = 'https://cors-anywhere.herokuapp.com/' + server.upload_url;
 
-		sendFile(uploadUrl, 'photo', canvas.toDataURL('png'), function (data) {
+		sendFile(uploadUrl, 'photo', dataURI, function (data) {
 			data = JSON.parse(data);
 			data.photo = data.photo.replace('\"', '"');
 
@@ -112,8 +117,8 @@ var wallPost = function (group_id) {
 					].join('');
 				});
 
-				var top = topText.getText();
-				var bottom = bottomText.getText();
+				var top = topText;
+				var bottom = bottomText;
 
 				var text = [];
 				var t = top ? '#' + top.toLowerCase().replace(/\s/g, '_') : '';
@@ -215,20 +220,33 @@ function initAll() {
 					if (!(settings & rights.wall)) {
 						alert('Очень жаль');
 					} else {
-						wallPost();
+						wallPost({
+							topText: topText.getText(),
+							bottomText: bottomText.getText(),
+							dataURI: canvas.toDataURL('png')
+						});
 					}
 					VK.removeCallback('onSettingsChanged', onSettingsChanged);
 				}
 				VK.callMethod('showSettingsBox', rights.wall);
 				VK.addCallback('onSettingsChanged', onSettingsChanged);
 			} else {
-				wallPost();
+				wallPost({
+					topText: topText.getText(),
+					bottomText: bottomText.getText(),
+					dataURI: canvas.toDataURL('png')
+				});
 			}
 		});
 	})
 
 	$(document).on('click', '#group-wall-post', function () {
-		wallPost(142290250);
+		wallPost({
+			group_id: 142290250,
+			topText: topText.getText(),
+			bottomText: bottomText.getText(),
+			dataURI: canvas.toDataURL('png')
+		});
 	})
 
 	VK.addCallback('onWindowResized', function (w, h) {
