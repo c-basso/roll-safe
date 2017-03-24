@@ -216,7 +216,7 @@ function initAll() {
 		var obj = canvas.getActiveObject();
 		var text = obj.text;
 		if (text) {
-			text.set({ text: text.toUpperCase() });
+			obj.set({ text: text.toUpperCase() });
 			canvas.renderAll();
 		}
 	});
