@@ -191,17 +191,17 @@ function initAll() {
 	var waterMark = new fabric.Textbox(groupLink, {
 		editable: false,
 		fill: 'rgb(255,255,255)',
-		fontSize: 15,
+		fontSize: 16,
 		fontFamily: 'impact'
 	});
 
 	var topPoint = new fabric.Point(hCenter, 50);
 	var bottonPoint = new fabric.Point(hCenter, height - 50);
-	var waterPoint = new fabric.Point(width - 50, height - 50);
+	var waterPoint = new fabric.Point(width - 20, height - 20);
 
 	topText.setPositionByOrigin(topPoint, 'center', 'center');
 	bottomText.setPositionByOrigin(bottonPoint, 'center', 'center');
-	waterMark.setPositionByOrigin(waterPoint, 'center', 'center');
+	waterMark.setPositionByOrigin(waterPoint, 'left', 'left');
 
 	canvas.add(imgInstance);
 	canvas.add(topText);
@@ -211,6 +211,15 @@ function initAll() {
 	canvas.setActiveObject(topText);
 	topText.enterEditing();
 	topText.hiddenTextarea.focus();
+
+	$(document).keydown(function(e) {
+		var text = canvas.getActiveObject();
+		console.log(text);
+		if (text) {
+			text.set({ text: '' });
+			canvas.renderAll();
+		}
+	});
 
 	$(document).on('click', '#my-wall-post', function () {
 		VK.api('account.getAppPermissions', function (data) {
