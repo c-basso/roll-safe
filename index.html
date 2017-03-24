@@ -212,7 +212,7 @@ function initAll() {
 	topText.enterEditing();
 	topText.hiddenTextarea.focus();
 
-	$(document).keydown(function(e) {
+	$(document).keypress(function(e) {
 		var obj = canvas.getActiveObject();
 		var text = obj.text;
 		if (text) {
