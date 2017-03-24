@@ -185,8 +185,15 @@ function initAll() {
 		padding: 10
 	}
 
+	var shadow = {
+		color: 'rgba(0,0,0,0.3)'
+	};
+
 	var topText = new fabric.Textbox(top, options);
 	var bottomText = new fabric.Textbox(bottom, options);
+
+	topText.setShadow(shadow);
+	bottomText.setShadow(shadow);
 	
 	var waterMark = new fabric.Textbox(groupLink, {
 		editable: false,
@@ -212,14 +219,14 @@ function initAll() {
 	topText.enterEditing();
 	topText.hiddenTextarea.focus();
 
-	$(document).keypress(function(e) {
-		var obj = canvas.getActiveObject();
-		var text = obj.text;
-		if (text) {
-			obj.set({ text: text.toUpperCase() });
-			canvas.renderAll();
-		}
-	});
+	// $(document).keypress(function(e) {
+	// 	var obj = canvas.getActiveObject();
+	// 	var text = obj.text;
+	// 	if (text) {
+	// 		obj.set({ text: text.toUpperCase() });
+	// 		canvas.renderAll();
+	// 	}
+	// });
 
 	$(document).on('click', '#my-wall-post', function () {
 		VK.api('account.getAppPermissions', function (data) {
