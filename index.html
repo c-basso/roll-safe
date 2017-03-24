@@ -9,6 +9,12 @@
 		if(parent.frames.length === 0){
 			window.location.href = 'https://' + groupLink;
 		}
+		var texts = [
+			{
+				top: 'Люди не смогут воспользоваться тобой',
+				bottom: 'если ты бесполезен',
+			}
+		];
 	</script>
 
 	<script src="https://vk.com/js/api/xd_connection.js?2"></script>
@@ -84,8 +90,6 @@ var sendFile = function (url, key, val, callback) {
 
 var wallPost = function (options) {
 	var group_id = options.group_id;
-	var topText = options.topText;
-	var bottomText = options.bottomText;
 	var dataURI = options.dataURI;
 
 	var getServerParams = {};
@@ -107,7 +111,6 @@ var wallPost = function (options) {
 			}
 
 			VK.api('photos.saveWallPhoto', data, function(save){
-				console.log(save);
 				var attachments = save.response.map(function (photo) {
 					return [
 						'photo',
@@ -117,20 +120,12 @@ var wallPost = function (options) {
 					].join('');
 				});
 
-				var top = topText;
-				var bottom = bottomText;
-
-				var text = [];
-				var t = top ? '#' + top.toLowerCase().replace(/\s/g, '_') : '';
-				var b = bottom ? '#' + bottom.toLowerCase().replace(/\s/g, '_') : '';
-
-				t && text.push(t);
-				text.push('&#128073;&#127998;&#128102;&#127998;');
-				b && text.push(b);
-				text = text.join('\n');
+				var text = [
+					'&#128073;&#127998;&#128102;&#127998;'
+				];
 
 				var wallParams = { 
-					message: text, 
+					message: text.join('\n'), 
 					attachments: attachments.join(',')
 				};
 
@@ -209,6 +204,7 @@ function initAll() {
 	canvas.add(imgInstance);
 	canvas.add(topText);
 	canvas.add(bottomText);
+	canvas.add(waterMark);
 
 	canvas.setActiveObject(topText);
 	topText.enterEditing();
